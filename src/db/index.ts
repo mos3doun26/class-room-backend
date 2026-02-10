@@ -8,5 +8,13 @@ if (!process.env.DATABASE_URL) {
 }
 
 const connectionString = process.env.DATABASE_URL;
-const client = postgres(connectionString);
+const client = postgres(connectionString, {
+  ssl: process.env.NODE_ENV === 'production' ? 'require' : false,
+  max: 10, // connection pool size
+  idle_timeout: 20,
+});
 export const db = drizzle(client, { schema });
+
+export const closeConnection = async () => {
+  await client.end();
+};

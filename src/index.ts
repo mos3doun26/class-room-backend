@@ -4,6 +4,11 @@ import cors from 'cors'
 
 const port = process.env.PORT || 3000
 const app = express()
+
+if(!process.env.FRONTEND_URL){
+    throw new Error("FRONTEND_URL is required for CORS confiuration");
+}
+
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],

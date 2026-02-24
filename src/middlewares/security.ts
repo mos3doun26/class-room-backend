@@ -3,7 +3,7 @@ import {Request, Response, NextFunction} from 'express'
 import aj from '../config/arcjet'
 
 export const securityMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    if(process.env.ARCJET_ENV === 'test') return next()
+    if(process.env.NODE_ENV === 'test') return next()
 
     try{
         const role: RateLimitRole = req.user?.role ?? 'guest' 
@@ -20,6 +20,7 @@ export const securityMiddleware = async (req: Request, res: Response, next: Next
             case 'student':
                 limit = 10
                 message = 'User request limit exceeded (10 per minute). Slow down.'
+                break;
             default:
                 limit = 5
                 message = 'Guest request limit exceeded (5 per minute). Please Sing Up for higher limits.'
@@ -68,7 +69,7 @@ export const securityMiddleware = async (req: Request, res: Response, next: Next
     } catch(e) {
         console.error("Arcjet midddleware Error: ", e)
         return res.status(500).json({
-            error: "interal error",
+            error: "internal error",
             message: "Something went wrong with security middleware"
         })
     }

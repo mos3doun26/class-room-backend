@@ -1,7 +1,12 @@
-import { betterAuth, string } from "better-auth";
+import { betterAuth } from "better-auth";
 import {drizzleAdapter} from 'better-auth/adapters/drizzle'
 import { db } from "../db";
 import * as schema from '../db/schema/auth'
+
+
+if (!process.env.BETTER_AUTH_SECRET) {
+    throw new Error("BETTER_AUTH_SECRET is required");
+}
 
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET,

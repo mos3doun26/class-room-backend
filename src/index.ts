@@ -2,7 +2,8 @@ import express from 'express'
 import subjectsRouter from './routes/departments' 
 import cors from 'cors'
 import { securityMiddleware } from './middlewares/security'
-
+import { auth } from './lib/auth'
+import {toNodeHandler} from 'better-auth/node'
 const port = process.env.PORT || 3000
 const app = express()
 
@@ -15,6 +16,10 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
+
+app.use('/api/auth', securityMiddleware)
+
+app.all('/api/auth/*splat', toNodeHandler(auth))
 
 app.use(express.json())
 
